@@ -11,7 +11,7 @@
   if (/\.googleusercontent\.com$/.test(location.hostname)) return;
   var h = document.head;
   function add(tag, attrs) { var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); h.appendChild(e); }
-  add('meta', { 'http-equiv': 'Content-Security-Policy', content: "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com https://accounts.google.com; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'" });
+  add('meta', { 'http-equiv': 'Content-Security-Policy', content: "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googles.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com https://accounts.google.com; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'" });
   add('meta', { name: 'referrer', content: 'no-referrer' });
   add('link', { rel: 'manifest', href: 'manifest.webmanifest' });
   add('link', { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' });
@@ -823,7 +823,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) Idle
    • Hosted elsewhere (e.g. GitHub Pages) → calls the same backend over
      HTTPS. Paste your Apps Script web-app URL (ends in /exec) below.
    --------------------------------------------------------- */
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxUA09oJKPzW7j4WrMw_Hz7eUVMfFWjFjCWiA8olWSLuBme_g9ZMnBFHK284VDptQlT/exec';
 const hasGAS = !!(window.google && google.script && google.script.run);
 const API_OK = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(API_URL);
 
