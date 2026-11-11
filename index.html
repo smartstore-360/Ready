@@ -11,7 +11,7 @@
   if (/\.googleusercontent\.com$/.test(location.hostname)) return;
   var h = document.head;
   function add(tag, attrs) { var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); h.appendChild(e); }
-  add('meta', { 'http-equiv': 'Content-Security-Policy', content: "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googles.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com https://accounts.google.com; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'" });
+  add('meta', { 'http-equiv': 'Content-Security-Policy', content: "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com https://accounts.google.com; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'" });
   add('meta', { name: 'referrer', content: 'no-referrer' });
   add('link', { rel: 'manifest', href: 'manifest.webmanifest' });
   add('link', { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' });
@@ -83,17 +83,105 @@ input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--prim
 .icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:var(--text);font-size:1.2rem;cursor:pointer;flex-shrink:0}
 .icon-btn:active{background:rgba(255,255,255,.08)}
 
-/* ---------- login ---------- */
-.login-view{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:calc(1rem + var(--sat)) 1rem calc(1rem + var(--sab))}
-.login-card{width:100%;max-width:420px;background:var(--surface);border:var(--border);border-radius:18px;padding:2rem 1.5rem;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.logo{text-align:center;margin-bottom:1.25rem}
-.logo-circle{width:88px;height:88px;margin:0 auto .75rem;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#22c55e,#0d9e4a);box-shadow:0 8px 20px rgba(34,197,94,.3);font-size:38px;color:#fff}
-.logo-text{font-size:1.8rem;font-weight:700;background:linear-gradient(to right,#22c55e,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent}
-.welcome{text-align:center;font-size:1.15rem;font-weight:600;margin-bottom:1.25rem;background:rgba(255,255,255,.05);padding:.6rem 1rem;border-radius:50px;overflow-wrap:anywhere}
-#loginForm{display:flex;flex-direction:column;gap:1rem}
-.pw-wrap{position:relative}.pw-wrap input{padding-right:3rem}
-.pw-toggle{position:absolute;right:2px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;color:var(--muted);cursor:pointer}
-.error-msg{color:#fecaca;padding:.6rem .8rem;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:8px;font-size:.9rem}
+/* ---------- login: phone-first, SmartStore 360 design ---------- */
+.login-view{
+  --navy:#0f2a5c;--blue:#1d5fe0;--blue-2:#3b82f6;--yellow:#fbbf24;--sub:#2b3f66;
+  --field:#ffffff;--field-b:#cfdcf1;--ph:#7d8fb3;--foot:#1d5fe0;
+  position:relative;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(180deg,#ffffff 0%,#f3f7ff 100%);color:var(--navy);
+  padding-top:var(--sat);
+}
+.login-view[data-theme="dark"]{
+  --navy:#e8eefc;--blue:#5b9bff;--blue-2:#3b82f6;--sub:#b9c8e6;--field:#13234f;--field-b:#2b3f75;--ph:#8fa3cc;--foot:#1a3f9e;
+  background:linear-gradient(170deg,#0b1a3a 0%,#0f2a5c 60%,#0b1a3a 100%);
+}
+.login-view .lv-top{position:absolute;top:0;left:0;width:100%;height:190px;pointer-events:none}
+.login-view .lv-top .w1{fill:var(--blue)}
+.login-view .lv-top .w2{fill:var(--blue-2);opacity:.45}
+.login-view[data-theme="dark"] .lv-top{opacity:.35}
+
+.theme-toggle{
+  position:absolute;top:calc(12px + var(--sat));right:14px;z-index:3;
+  width:44px;height:44px;border-radius:50%;border:1px solid #d6e2f7;background:#ffffff;color:var(--blue);
+  display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem;cursor:pointer;
+  box-shadow:0 4px 12px rgba(15,42,92,.12);
+}
+.theme-toggle .ic-sun{display:none}
+.login-view[data-theme="dark"] .theme-toggle{background:#13234f;color:#fbbf24;border-color:#2b3f75}
+.login-view[data-theme="dark"] .theme-toggle .ic-sun{display:inline-block}
+.login-view[data-theme="dark"] .theme-toggle .ic-moon{display:none}
+.theme-toggle:focus-visible{outline:3px solid rgba(29,95,224,.35);outline-offset:2px}
+
+.login-main{
+  position:relative;z-index:1;flex:1;width:100%;max-width:440px;margin:0 auto;
+  padding:clamp(34px,7vh,56px) 22px 8px;display:flex;flex-direction:column;align-items:center;
+}
+.brand{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:22px}
+.brand-mark{
+  position:relative;width:96px;height:96px;border-radius:50%;background:#ffffff;color:var(--blue);
+  display:flex;align-items:center;justify-content:center;font-size:2.3rem;
+  box-shadow:0 10px 24px rgba(15,42,92,.18);
+}
+.brand-mark::before{
+  content:"";position:absolute;left:-18px;top:-16px;width:132px;height:96px;
+  border:6px solid transparent;border-top-color:var(--yellow);border-radius:50%;transform:rotate(-14deg);
+}
+.brand-name{margin-top:12px;font-size:clamp(2.1rem,11vw,2.7rem);font-weight:800;line-height:1;letter-spacing:-.5px;color:var(--navy)}
+.brand-360{
+  display:inline-block;margin-top:6px;padding:4px 24px 6px;border-radius:16px;
+  background:linear-gradient(135deg,var(--blue-2),var(--blue));color:#ffffff;
+  font-size:clamp(2.1rem,11vw,2.7rem);font-weight:800;line-height:1.1;box-shadow:0 8px 18px rgba(29,95,224,.3);
+}
+.brand-tag{margin-top:12px;font-size:.98rem;font-style:italic;font-weight:600;color:var(--sub)}
+.login-company{margin-top:8px;font-size:.9rem;font-weight:600;color:var(--sub);overflow-wrap:anywhere}
+
+.login-form{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.lf-field{position:relative;display:block;margin:0}
+.lf-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;text-align:center;color:var(--blue);font-size:1.1rem;pointer-events:none;z-index:1}
+.login-view .login-form input{
+  width:100%;min-height:58px;padding:.8rem 3.4rem .8rem 3.2rem;border-radius:16px;
+  border:1.5px solid var(--field-b);background:var(--field);color:var(--navy);
+  font-size:16px;font-weight:500;box-shadow:none;
+}
+.login-view .login-form input::placeholder{color:var(--ph);opacity:1}
+.login-view .login-form input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(29,95,224,.16)}
+.pw-toggle{
+  position:absolute;right:4px;top:50%;transform:translateY(-50%);z-index:1;
+  width:44px;height:44px;border:0;background:none;color:var(--ph);cursor:pointer;border-radius:12px;
+}
+.pw-toggle:focus-visible{outline:3px solid rgba(29,95,224,.35)}
+.error-msg{color:#b91c1c;padding:.6rem .8rem;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;font-size:.9rem}
+.login-view[data-theme="dark"] .error-msg{color:#fecaca;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
+
+.login-btn{
+  display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:60px;margin-top:6px;
+  border:0;border-radius:999px;cursor:pointer;color:#ffffff;font:inherit;font-size:1.15rem;font-weight:700;
+  background:linear-gradient(90deg,#3b82f6,#1d5fe0);box-shadow:0 12px 24px rgba(29,95,224,.35);
+  transition:transform .12s ease,opacity .15s ease;touch-action:manipulation;
+}
+.login-btn::after{content:"\f0a9";font-family:"Font Awesome 6 Free";font-weight:900;font-size:1.35rem}
+.login-btn:active:not(:disabled){transform:scale(.98)}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+.login-btn:focus-visible{outline:3px solid rgba(29,95,224,.35);outline-offset:3px}
+
+.login-slogan{margin-top:30px;text-align:center;font-size:1.3rem;font-weight:800;font-style:italic;line-height:1.2;color:var(--blue)}
+
+.login-foot{
+  position:relative;margin-top:auto;padding:34px 16px calc(16px + var(--sab));
+  background:var(--foot);color:#ffffff;text-align:center;font-size:.82rem;
+}
+.login-foot::before{
+  content:"";position:absolute;left:-10%;right:-10%;top:-22px;height:44px;
+  background:var(--foot);border-radius:50% 50% 0 0;
+}
+.foot-lines{position:relative;display:flex;flex-direction:column;gap:4px}
+.foot-bold{font-weight:700;letter-spacing:.2px}
+
+@media (min-width:768px){
+  .login-main{padding-top:64px}
+  .login-slogan{font-size:1.45rem}
+}
+@media (prefers-reduced-motion:reduce){.login-btn{transition:none}}
 
 /* ---------- shell ---------- */
 .app-header{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:.25rem;padding:calc(.35rem + var(--sat)) calc(.5rem + var(--sar)) .35rem calc(.5rem + var(--sal));background:rgba(17,24,39,.96);border-bottom:var(--border)}
@@ -342,22 +430,49 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
 <div id="toasts" class="toasts" aria-live="polite"></div>
 
 <!-- ================= LOGIN ================= -->
-<div id="loginView" class="login-view">
-  <div class="login-card">
-    <div class="logo"><div class="logo-circle"><i class="fas fa-store"></i></div><h1 class="logo-text">SmartStore 360</h1></div>
-    <h2 class="welcome" id="loginCompanyName">Welcome!</h2>
-    <form id="loginForm" novalidate>
-      <label class="field"><span>Username</span>
-        <input id="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64" enterkeyhint="next" required></label>
-      <label class="field"><span>Password</span>
-        <div class="pw-wrap"><input id="password" type="password" autocomplete="current-password" maxlength="128" enterkeyhint="go" required>
-        <button type="button" class="pw-toggle" data-pw="password" aria-label="Show password"><i class="fas fa-eye"></i></button></div></label>
+<div id="loginView" class="login-view" data-theme="light">
+  <svg class="lv-top" viewBox="0 0 400 190" preserveAspectRatio="none" aria-hidden="true">
+    <path class="w2" d="M0 0H400V92C330 128 262 58 190 96S52 132 0 84Z"/>
+    <path class="w1" d="M0 0H400V58C326 92 250 22 170 60S48 96 0 46Z"/>
+  </svg>
+
+  <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Dark / light mode">
+    <i class="fas fa-moon ic-moon" aria-hidden="true"></i><i class="fas fa-sun ic-sun" aria-hidden="true"></i>
+  </button>
+
+  <main class="login-main">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><i class="fas fa-cart-shopping"></i></div>
+      <h1 class="brand-name">SmartStore</h1>
+      <span class="brand-360">360</span>
+      <p class="brand-tag">Smarter Business. Greater Control.</p>
+      <p id="loginCompanyName" class="login-company hidden">Welcome!</p>
+    </div>
+
+    <form id="loginForm" class="login-form" novalidate>
+      <label class="lf-field">
+        <span class="lf-icon" aria-hidden="true"><i class="fas fa-user"></i></span>
+        <input id="username" placeholder="Username" aria-label="Username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="64" enterkeyhint="next" required>
+      </label>
+      <label class="lf-field">
+        <span class="lf-icon" aria-hidden="true"><i class="fas fa-lock"></i></span>
+        <input id="password" type="password" placeholder="Password" aria-label="Password" autocomplete="current-password" maxlength="128" enterkeyhint="go" required>
+        <button type="button" class="pw-toggle" data-pw="password" aria-label="Show password"><i class="fas fa-eye"></i></button>
+      </label>
       <div id="loginError" class="error-msg hidden" role="alert"></div>
-      <p id="loginOutbox" class="small hidden" style="color:#fdba74"></p>
-      <button type="submit" id="loginButton" class="btn btn-primary btn-block btn-lg">Sign In</button>
+      <p id="loginOutbox" class="small hidden" style="color:#b45309"></p>
+      <button type="submit" id="loginButton" class="login-btn">Sign In</button>
     </form>
-    <p class="muted center small mt">© <span id="yr"></span> SmartStore 360</p>
-  </div>
+
+    <p class="login-slogan">Smart Business<br>in Your Pocket!</p>
+  </main>
+
+  <footer class="login-foot">
+    <div class="foot-lines">
+      <span class="foot-bold">SmartStore 360 &nbsp;•&nbsp; v3.16 &nbsp;•&nbsp; Nov 2026</span>
+      <span>© <span id="yr"></span> SmartStore 360</span>
+    </div>
+  </footer>
 </div>
 
 <!-- ================= APP ================= -->
@@ -1281,6 +1396,7 @@ const Brand = {
     this.s = Object.assign({}, this.s, s);
     const name = this.s.companyName || 'SmartStore 360';
     $('loginCompanyName').textContent = name;
+    $('loginCompanyName').classList.toggle('hidden', name === 'SmartStore 360');
     $('headerCompanyName').textContent = name;
     $('dashStoreName').textContent = name;
     document.title = name === 'SmartStore 360' ? name : name + ' — SmartStore 360';
@@ -2963,6 +3079,24 @@ const Auth = {
   logout() { const t = S.token, note = this.unsentNote(); this.reset(); if (t) api('logout', t).catch(() => {}); toast('Logged out.' + note); }
 };
 $('loginForm').addEventListener('submit', e => Auth.login(e));
+/* Light / dark toggle on the sign-in screen (choice remembered on this device) */
+(function () {
+  const lv = $('loginView'), tb = $('themeToggle');
+  const KEY = 'ss360-login-theme';
+  function apply(mode) {
+    lv.dataset.theme = mode;
+    tb.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    tb.setAttribute('aria-pressed', String(mode === 'dark'));
+  }
+  let saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) { /* storage blocked */ }
+  apply(saved === 'dark' ? 'dark' : 'light');
+  tb.addEventListener('click', () => {
+    const next = lv.dataset.theme === 'dark' ? 'light' : 'dark';
+    apply(next);
+    try { localStorage.setItem(KEY, next); } catch (e) { /* storage blocked */ }
+  });
+})();
 $('logoutButton').addEventListener('click', () => Auth.logout());
 qsa('[data-pw]').forEach(b => b.addEventListener('click', () => {
   const i = $(b.dataset.pw), show = i.type === 'password';
