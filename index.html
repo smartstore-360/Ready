@@ -133,7 +133,10 @@ input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--prim
   font-size:clamp(2.1rem,11vw,2.7rem);font-weight:800;line-height:1.1;box-shadow:0 8px 18px rgba(29,95,224,.3);
 }
 .brand-tag{margin-top:12px;font-size:.98rem;font-style:italic;font-weight:600;color:var(--sub)}
-.login-company{margin-top:8px;font-size:.9rem;font-weight:600;color:var(--sub);overflow-wrap:anywhere}
+.login-company{margin-top:14px;display:inline-block;max-width:100%;padding:7px 16px;border-radius:999px;background:rgba(29,95,224,.1);border:1px solid rgba(29,95,224,.28);font-size:.92rem;font-style:normal;font-weight:700;letter-spacing:.4px;text-transform:uppercase;overflow-wrap:anywhere;animation:companyHue 9s ease-in-out infinite}
+@keyframes companyHue{0%,100%{color:#1d5fe0}35%{color:#0e7490}65%{color:#2563eb}}
+.login-view[data-theme="dark"] .login-company{background:rgba(91,155,255,.14);border-color:rgba(91,155,255,.35);animation-name:companyHueDark}
+@keyframes companyHueDark{0%,100%{color:#e8eefc}35%{color:#7dd3fc}65%{color:#c4b5fd}}
 
 .login-form{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:4px}
 .lf-field{position:relative;display:block;margin:0}
@@ -181,7 +184,7 @@ input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--prim
   .login-main{padding-top:64px}
   .login-slogan{font-size:1.45rem}
 }
-@media (prefers-reduced-motion:reduce){.login-btn{transition:none}}
+@media (prefers-reduced-motion:reduce){.login-btn{transition:none}.login-company{animation:none}}
 
 /* ---------- shell ---------- */
 .app-header{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:.25rem;padding:calc(.35rem + var(--sat)) calc(.5rem + var(--sar)) .35rem calc(.5rem + var(--sal));background:rgba(17,24,39,.96);border-bottom:var(--border)}
