@@ -1936,7 +1936,7 @@ const Sales = {
     this.ref = null;
     $('itemName').value = ''; $('quantity').value = 1; $('unitPrice').value = ''; this.current = null; this.showAvail();
     this.render();
-    if (canHover()) $('itemName').focus();
+    $('itemName').focus();   // runs synchronously inside the tap, so phones allow it (no canHover gate)
   },
   render() {
     const list = clear($('cartList'));
